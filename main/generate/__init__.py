@@ -36,7 +36,6 @@ class ExcelGenerator:
         for items in doc:
             # write cols
             for obj in items["row"]:
-                # print(obj)
                 self.write_type(obj["value"], obj["type"], obj["pos"] + f"{n}")
 
             n += 1
@@ -66,8 +65,9 @@ class ExcelGenerator:
         # images_path = self.image_path
         # image_data = BytesIO(urlopen(url).read())
         # path of image
-        file = "python-logo.png"
-        filename = self.image_path + file
+        # file = "python-logo.png"
+        print(file.split("img/")[1])
+        filename = self.image_path + file.split("img/")[1]
         image = Image.open(filename)
 
         # resize file image into 180 px height
@@ -92,9 +92,9 @@ class ExcelGenerator:
         # self.worksheet.insert_image(pos, image_data, {'image_data': image_data, 'x_scale': 0.3, 'y_scale': 0.3})
 
     def get_file_path(self):
-        return f"{path.dirname(__file__)}/../../tmp/{self.file_name}"
+        return f"{path.dirname(__file__)}/../../tmp/{self.file_name}" # exemple path
 
-    def clear_img_path(self):
-        for img in self.array_images:
-            if path.exists(img):
-                remove(img)
+    # def clear_img_path(self):
+    #     for img in self.array_images:
+    #         if path.exists(img):
+    #             remove(img)
