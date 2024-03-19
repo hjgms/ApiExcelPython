@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request
 from generate import ExcelGenerator
 from waitress import serve
 
@@ -24,10 +24,8 @@ def generate_excel():
         return jsonify({"error_in_write_excel": err})
 
     path = generator.get_file_path()
-    return jsonify({"file_path":path})
-    # return send_file(path)
+    return jsonify({"file_path": path})
 
 
 if __name__ == "__main__":
     serve(app, host="localhost", port=4545)
-    # app.run(debug=False) #of debug and view errors

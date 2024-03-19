@@ -1,10 +1,8 @@
 from re import findall
-# from io import BytesIO
-# from urllib.request import urlopen
 from random import randint
 from xlsxwriter import Workbook
 from datetime import datetime
-from os import path, remove
+from os import path
 from PIL import Image
 
 
@@ -42,9 +40,6 @@ class ExcelGenerator:
 
         self.workbook.close()
 
-        # delete images in tmp
-        # self.clear_img_path()
-
     def write_type(self, value, type_write="string", pos="A1"):
         if type_write == "string":
             self.worksheet.write_string(pos, value)
@@ -61,40 +56,18 @@ class ExcelGenerator:
             self.set_image(pos, value)
 
     def set_image(self, pos="A1", file=""):
-        # url = 'https://python.org/logo.png'
-        # images_path = self.image_path
-        # image_data = BytesIO(urlopen(url).read())
         # path of image
-        # file = "python-logo.png"
-        print(file.split("img/")[1])
         filename = self.image_path + file.split("img/")[1]
         image = Image.open(filename)
 
-        # resize file image into 180 px height
+        # resize row of image
         w, h = image.size
-        # scale = h / 180
-        # new_h = int(h / scale)
-        # new_w = int(w / scale)
-
-        # image.resize((new_w, new_h))
-
-        # url_split = url.split('/')
-        # filename = url_split[len(url_split) - 1]
-        # file_split = filename.split('.')
-        # filename = images_path + filename
-        # image.save(filename, f"{file_split[1]}")
-        # self.array_images.append(filename)
 
         row = int(''.join(findall(r'\d+', pos)))
 
         self.worksheet.set_row(row - 1, h * 0.3)
         self.worksheet.insert_image(pos, filename, {'x_scale': 0.3, 'y_scale': 0.3})
-        # self.worksheet.insert_image(pos, image_data, {'image_data': image_data, 'x_scale': 0.3, 'y_scale': 0.3})
 
     def get_file_path(self):
-        return f"{path.dirname(__file__)}/../../tmp/{self.file_name}" # exemple path
-
-    # def clear_img_path(self):
-    #     for img in self.array_images:
-    #         if path.exists(img):
-    #             remove(img)
+        # exemple path
+        return f"{path.dirname(__file__)}/../../tmp/{self.file_name}"
