@@ -22,17 +22,6 @@ isso dentro do array "items", é possivel adicionar um objeto da linha
         ]
     }
 
-estilos nas linhas
-
-    {
-        "row": [
-            # itens da linha do excel
-        ],
-        "style": {
-            # argumentos da biblioteca
-        }
-    }
-
 ### Adicionar item nas linhas
 
 é obrigatorio adicionar o valor da celula, o tipo, e a posicao na coluna
