@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request
-from generate import ExcelGenerator
-from waitress import serve
+from main.tasks import TaskProgram
+from main.database import Database
+
 
 app = Flask(__name__)
+queue = TaskProgram()
+database = Database()
 
 
 @app.route('/', methods=["GET"])
@@ -10,22 +13,49 @@ def hello():
     return jsonify("Running... ")
 
 
+@app.route('/excel/status/', methods=["GET"])
+def get_excel_queue():
+
+    response = queue.get_task_status(
+        usuario=request.json['usuario'],
+        empresa=request.json['empresa'],
+        codigo=request.json['id']
+    )
+
+    return jsonify(response)
+
+
 @app.route('/excel/generate/', methods=["GET"])
-def generate_excel():
+def add_excel_queue():
+
     # body
     items = request.json['items']
     filename = request.json['filename']
-    generator = ExcelGenerator(filename=filename)
+    usuario = request.json['usuario']
+    empresa = request.json['empresa']
 
-    # generate excel
-    try:
-        generator.write_document(doc=items)
-    except Exception as err:
-        return jsonify({"error_in_write_excel": err})
+    # inserir a task na fila para controle de status
+    codigo = database.insert_into_fila(
+        usuario=usuario,
+        empresa=empresa,
+        arquivo=filename,
+        status=0
+    )
+    print(codigo)
+    task = {
+        "id": codigo,
+        "empresa": empresa,
+        "usuario": usuario,
+        "filename": filename,
+        "items": items
+    }
 
-    path = generator.get_file_path()
-    return jsonify({"file_path": path})
+    queue.append_task(task)
+
+    return jsonify({"id_task": codigo})
 
 
 if __name__ == "__main__":
-    serve(app, host="localhost", port=4545)
+    # serve(app, host="localhost", port=4545)
+    queue.run_tasks()
+    app.run(host="localhost", port=4545)

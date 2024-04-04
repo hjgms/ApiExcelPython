@@ -8,13 +8,9 @@ from PIL import Image
 
 class ExcelGenerator:
 
-    def __init__(self, filename=""):
-
-        if filename == "":
-            random = randint(0, 999)
-            self.file_name = f"archive_{random}.xlsx"
-        else:
-            self.file_name = filename
+    def __init__(self):
+        random = randint(0, 999)
+        self.file_name = f"archive_{random}.xlsx"
 
         # create document
         self.workbook = Workbook(self.get_file_path())
@@ -24,19 +20,23 @@ class ExcelGenerator:
         self.date_format = self.workbook.add_format({'num_format': 'dd/mm/yy'})
         self.price_format = self.workbook.add_format({'num_format': '#,##0.00'})
 
-        # array images
-        self.array_images = []
+        # image
         self.image_path = f"{path.dirname(__file__)}/../../tmp/img/"
 
-    def write_document(self, doc):
-        n = 1
-        # write lines
-        for items in doc:
-            # write cols
-            for obj in items["row"]:
-                self.write_type(obj["value"], obj["type"], obj["pos"] + f"{n}")
+        # progress
+        # self.progress = 0
+        # self.rows_size = 0
 
-            n += 1
+    def set_filename(self, filename=""):
+        self.file_name = filename
+        self.workbook.filename = self.get_file_path()
+
+    def write_document(self, doc):
+
+        # write lines
+        for obj in doc:
+            # write cols
+            self.write_type(obj["value"], obj["type"], obj["pos"])
 
         self.workbook.close()
 
@@ -57,7 +57,7 @@ class ExcelGenerator:
 
     def set_image(self, pos="A1", file=""):
         # path of image
-        filename = self.image_path + file.split("img/")[1]
+        filename = self.image_path + file
         image = Image.open(filename)
 
         # resize row of image
@@ -68,6 +68,10 @@ class ExcelGenerator:
         self.worksheet.set_row(row - 1, h * 0.3)
         self.worksheet.insert_image(pos, filename, {'x_scale': 0.3, 'y_scale': 0.3})
 
-    def get_file_path(self):
+    def get_file_path(self, name=""):
+        if name == "":
+            name = self.file_name
+
         # exemple path
-        return f"{path.dirname(__file__)}/../../tmp/{self.file_name}"
+        return f"{path.dirname(__file__)}/../../tmp/{name}"
+
