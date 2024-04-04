@@ -3,6 +3,8 @@
 ### Argumentos suportados
 
     {
+        "usuario": 1,
+        "empresa": 4,
         "filename":"nome_do_arquivo.xlsx",
         "items": [
             # argumentos do excel
