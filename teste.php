@@ -1,4 +1,83 @@
-	class SendRequestApiExcel {
+		$api_excel = new SendRequestApiExcel();
+
+		
+
+		// "value": "Teste de Processo", "type": "string", "pos": "A{i}"
+
+		$tituloColunasExcel = array(
+			'CÓDIGO INTERNO',
+			'CÓDIGO FÁBRICA',
+			'CODIGOBARRAS',
+			'DESCRIÇÃO COMPLETA',
+			'DESCRIÇÃO COMERCIAL',
+			'GRUPO',
+			'SUBGRUPO',
+			'MARCA',
+			'LINHA',
+			'MODELO',
+			'VOLTAGEM',
+			'COR',
+			'NCM',
+			'UF ORIGEM',
+			'PREÇO VENDA',
+			'PREÇO DE FÁBRICA',
+			'DESCONTO %',
+			'IPI %',
+			'ALIQICMSORIGEM',
+			'ALIQICMSINTERNA',
+			'IVA',
+			'FRETE R$',
+			'FRETE %',
+			'UNIDADE',
+			'QTDE EMBALAGEM DE VENDA',
+			'CST',
+			'ALIQUOTA COFINS CST',
+			'ALIQUOTA IPI CST',
+			'ALIQUOTA PIS CST',
+			'CSOSN',
+			'CFOP DENTRO',
+			'CFOP FORA',
+			'PESOLIQ',
+			'PESOBRUTO',
+			'QTDE EMBALAGEM DE COMPRA',
+			'VALOR PI',
+			'ALIQUOTA COFINS',
+			'ALIQUOTA PIS',
+			'PERCENTUAL ST',
+			'UNID FABRIL',
+			'OBSERVAÇÃO',
+			'DIFERENÇA ICMS',
+			'REDUÇÃO BASE ICMS',
+			'REDUÇÃO BASE ST',
+			'RETENÇÃO PIS',
+			'RETENÇÃO COFINS',
+			'RETENÇÃO CSLL',
+			'RETENÇÃO IRRF',
+			'RETENÇÃO PREV. SOCIAL',
+			'LOCALIZAÇÃO',
+			'ENQUADRAMENTO IPI',
+			'ALIQUOTA PIS ORIGEM',
+			'ALIQUOTA COFINS ORIGEM',
+			'IMAGEM'
+		);
+
+		$linha1 = array();
+		foreach($tituloColunasExcel as $key => $item) {
+			$linha1 += ["value" => $item, "type" => "string", "pos" => $api_excel->numberToChar($key)."1"];
+		}
+
+		$aleatorio = rand(0, 999);
+		$fileName = "ProdutosImportacao_{$token->emp}_{$aleatorio}.xlsx";
+		$data_api = array(
+			'empresa' => $args['codempresa'],
+			'usuario' => 1,
+			'filename' => $fileName,
+			'items' => []
+		);
+
+		$api_excel->generateExcel($data_api);
+
+class SendRequestApiExcel {
   
 		private $api_url = 'http://localhost:4545';
 		private $route_generate = '/excel/generate/';
